@@ -14,7 +14,7 @@ int main()
     }
     gets(s);
     for(a=strlen(s)-1;a>=0;a--)
-    putchar(s[a]);
+    printf("%c",s[a]);
     free(s);
     return 0;
 }
