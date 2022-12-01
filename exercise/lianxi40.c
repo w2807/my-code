@@ -4,6 +4,7 @@
 #include<string.h>
 #include<malloc.h>
 void xipai(char pai[][10]);
+void fapai(char pai[][10]);
 int main()
 {
     time_t t;
@@ -15,20 +16,35 @@ int main()
 	"黑桃2","黑桃3","黑桃4","黑桃5","黑桃6","黑桃7","黑桃8","黑桃9","黑桃10","黑桃J","黑桃Q","黑桃K","黑桃A",
 	};
     xipai(pai);
-    int i;
-    for(i=0;i<52;i++)
-    printf("%s\t",*(pai+i));
+    fapai(pai);
     return 0;
 }
 void xipai(char pai[][10])
 {
     int i,j;
     int n;
-    char a[10]={0};
+    char *a=(char*)malloc(10);
     for(n=0;n<52;n++)
     {
         i=rand()%52;
         j=rand()%52;
-        
+        strcpy(a,pai[i]);
+        strcpy(pai[i],pai[j]);
+        strcpy(pai[j],a);
+    }
+}
+void fapai(char pai[][10])
+{
+    int i,j=0,k;
+    for(i=1;i<=4;i++)
+    {
+        printf("第%d堆：",i);
+        j+=13;
+        if(j<=52)
+        {
+            for(k=j-13;k<j;k++)
+            printf("%s\t",pai[k]);
+        }
+        printf("\n");
     }
 }

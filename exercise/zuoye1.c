@@ -1,15 +1,13 @@
-#include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 int main()
 {
-    int a,i,j=1;
-    float s=0;
-    for(a=2;a<=10;a=a+2)
-    {
-        for(i=1;i<=a;i++)
-        j*=i;
-        s+=1.0/j;
-    }
-    printf("%.12f\n",s);
+    char *p[4]={"12","34","56","78"};
+    char a[10]={0};
+    strcpy(a,p[0]);
+    strcpy(p[0],p[1]);
+    strcpy(p[1],a);
+    printf("%s\n",p[0]);
+    printf("%s",p[1]);
     return 0;
 }
