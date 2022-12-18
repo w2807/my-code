@@ -50,7 +50,7 @@ char *jian(int a1[],int a2[],int l1,int l2)
     int c[2000]={0};
     static char b[2000];
     int i=0,l;
-    l=l1;
+    l=(l1>l2)?l1:l2;
     for(i=0;i<l;i++)
     {
         if(a1[i]<a2[i])
@@ -61,13 +61,10 @@ char *jian(int a1[],int a2[],int l1,int l2)
         else
         c[i]=a1[i]-a2[i];
     }
-    for(i=l;i>=0;i--)
-    if(a1[i]<=a2[i])
+    while(l>1&&c[l-1]==0)
     l--;
-    else
-    break;
-    reverse(c,c+l);
-    for(i=0;i<2000&&l>=0;l--,i++)
+    reverse(c,c+l-1);
+    for(i=0;i<l;i++)
     b[i]=c[i]+'0';
     return b;
 }

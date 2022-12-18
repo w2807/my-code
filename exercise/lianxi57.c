@@ -4,13 +4,13 @@
 char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2);   //加两个表示符号的参数
 char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2);
 void reverse(int *start,int *end);
-int judge1(char c1[])
+int judge1(char s[])
 {
-    if(c1[0]=='-')
+    if(s[0]=='-')
     return 0;
     return 1;
 }
-int judge2(char s1[],char s2[],int l1,int l2);
+int judge2(int a1[],int a2[],int l1,int l2);
 char s1[1000]={0},s2[1000]={0};
 int main()
 {
@@ -62,18 +62,12 @@ int main()
 }
 char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
-    char *p1,c1[1000]={0},c2[1000]={0};
-    int i,j;
-    for(i=0;i<l1;i++)
-    c1[i]=a1[l1-1-i]+'0';
-    for(i=0;i<l2;i++)
-    c2[i]=a2[l2-1-i]+'0';
-    if(((n1&&n2)||((!n1)&&(!n2)))&&judge2(c1,c2,l1,l2)==0)
-    return "0";
+    char *p1;
     p1=(char*)malloc(2000);
     if(((!n1)&&(n2))||((n1)&&(!n2)))
     p1=jia(a1,a2,l1,l2,1,1);
     static char b[2000]={0};
+    int i,j,flag=1;
     if((!n1)&&n2)
     {
         b[0]='-';
@@ -87,7 +81,7 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
         b[i]=*(p1+i);
         return b;
     }
-    if(judge2(c1,c2,l1,l2)<0)
+    if(!judge2(a1,a2,l1,l2))
     {
         int *p1,*p2,tmp,i,l=(l1>=l2)?l1:l2;
         p1=a1;
@@ -98,6 +92,7 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
             *(p1+i)=*(p2+i);
             *(p2+i)=tmp;
         }
+        flag=0;
     }
     int c[2000]={0};
     int l;
@@ -115,7 +110,7 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
     while(l>1&&c[l-1]==0)
     l--;
     reverse(c,c+l-1);
-    if((((!n1)&&(!n2))&&(judge2(c1,c2,l1,l2)>=0))||(n1&&n2&&(judge2(c1,c2,l1,l2)<0)))
+    if((((!n1)&&(!n2))&&(flag))||(n1&&n2&&(!flag)))
     {
         b[0]='-';
         for(i=1,j=0;i<l+1&&j<l;i++,j++)
@@ -126,37 +121,39 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
     b[i]=c[i]+'0';
     return b;
 }
-int judge2(char c1[],char c2[],int l1,int l2)
+int judge2(int a1[],int a2[],int l1,int l2)
 {
     if(l1<l2)
-    return -1;
-    else if(l1>l2)
+    return 0;
+    if(l1>l2)
     return 1;
-    return strcmp(c1,c2);
+    int i,j=0;
+    for(i=l1-1;i>=0;i--)
+    {
+        if(a1[i]>=a2[i])
+        j++;
+        else
+        break;
+    }
+    if(j==l1)
+    return 1;
+    return 0;
 }
 char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
-    int i=0,j=0;
-    char *p,c1[1000]={0},c2[1000]={0};
-    for(i=0;i<l1;i++)
-    c1[i]=a1[l1-1-i]+'0';
-    for(i=0;i<l2;i++)
-    c2[i]=a2[l2-1-i]+'0';
-    if((((!n1)&&n2)||(n1&&(!n2)))&&judge2(c1,c2,l1,l2)==0)
-    return "0";
+    char *p;
     static char b[2000]={0};
+    int i=0,j=0;
     p=(char*)malloc(2000);
-    if((((!n1)&&n2)||(n1&&(!n2)))&&judge2(c1,c2,l1,l2)>0)
+    if(((!n1)&&n2)||(n1&&(!n2)))
     p=jian(a1,a2,l1,l2,1,1);
-    else if((((!n1)&&n2)||(n1&&(!n2)))&&judge2(c1,c2,l1,l2)<0)
-    p=jian(a2,a1,l2,l1,1,1);
-    if((((!n1)&&n2)&&(judge2(c1,c2,l1,l2)<0))||((n1&&(!n2))&&(judge2(c1,c2,l1,l2)>0)))
+    if((((!n1)&&n2)&&(!judge2(a1,a2,l1,l2)))||((n1&&(!n2))&&(judge2(a1,a2,l1,l2))))
     {
         for(i=0;i<strlen(p);i++)
         b[i]=*(p+i);
         return b;
     }
-    else if((((!n1)&&n2)&&(judge2(c1,c2,l1,l2)>0))||((n1&&(!n2))&&(judge2(c1,c2,l1,l2)<0)))
+    else if((((!n1)&&n2)&&(judge2(a1,a2,l1,l2)))||((n1&&(!n2))&&(!judge2(a1,a2,l1,l2))))
     {
         b[0]='-';
         for(i=1,j=0;i<strlen(p)+1;i++,j++)

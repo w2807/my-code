@@ -3,7 +3,7 @@
 #include<malloc.h>
 char *cheng(int a1[],int a2[],int l1,int l2);
 void reverse(int *strat,int *end);
-int judge(char s[])
+int judge1(char s[])
 {
     if(s[0]=='-')
     return 0;
@@ -15,7 +15,7 @@ int main()
     gets(s1);
     gets(s2);
     int a1[1000]={0},a2[1000]={0},i,j,l1,l2;
-    if(!judge(s1))
+    if(!judge1(s1))
     {
         l1=strlen(s1)-1;
         for(i=1,j=l1-1;i<l1+1&&j>=0;i++,j--)
@@ -27,7 +27,7 @@ int main()
         for(i=0,j=l1-1;i<l1&&j>=0;i++,j--)
         a1[j]=s1[i]-'0';
     }
-    if(!judge(s2))
+    if(!judge1(s2))
     {
         l2=strlen(s2)-1;
         for(i=1,j=l2-1;i<l2+1&&j>=0;i++,j--)
@@ -77,10 +77,10 @@ char *cheng(int a1[],int a2[],int l1,int l2)
         c[i]=c[i]%10;
     }
     reverse(c,c+l-1);
-    if((judge(s1)&&judge(s2))||((!judge(s1))&&(!judge(s2))))
+    if((judge1(s1)&&judge1(s2))||((!judge1(s1))&&(!judge1(s2))))
     for(i=0;i<l;i++)
     b[i]=c[i]+'0';
-    else if((judge(s1)&&(!judge(s2)))||((!judge(s1))&&judge(s2)))
+    else if((judge1(s1)&&(!judge1(s2)))||((!judge1(s1))&&judge1(s2)))
     {
         b[0]='-';
         for(i=1,j=0;i<l+1&&j<l;i++,j++)

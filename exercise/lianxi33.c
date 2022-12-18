@@ -3,20 +3,24 @@
 int judge2(int a1[],int a2[],int l1,int l2)
 {
     if(l1<l2)
-    return 0;
+    return -1;
     if(l1>l2)
     return 1;
-    int i,j=0;
+    int i,j=0,k=0;
     for(i=l1-1;i>=0;i--)
     {
-        if(a1[i]>=a2[i])
+        if(a1[i]>a2[i])
         j++;
-        else
+        else if(a1[i]==a2[i])
+        k++;
+        else 
         break;
     }
-    if(j==l1)
-    return 1;
+    if(k==l1)
     return 0;
+    else if((j+k)<l1)
+    return -1;
+    return 1;
 }
 int main()
 {
@@ -50,5 +54,6 @@ int main()
     printf("\n");
     for(i=0;i<l2;i++)
     printf("%d",a2[i]);
+    printf("\n%d",judge2(a1,a2,l1,l2));
     return 0;
 }
