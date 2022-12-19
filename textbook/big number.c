@@ -10,16 +10,16 @@ char *chu(int (*a1)[MAX],int (*a2)[MAX],int l1,int l2,int n1,int n2);    //用�
 void reverse(int *sat,int *end);    //将数组中的各个数字反向
 int judge(char c1[]);    //判断输入的数是否是负数
 int compare(char c1[],char c2[],int l1,int l2);    //判断输入的两个数字哪个更大
-void sub(int (*a1)[MAX],int (*a2)[MAX],int* l1,int l2);    //该函数在除法中调用，用于以减法模拟除法
+void jian1(int (*a1)[MAX],int (*a2)[MAX],int* l1,int l2);    //该函数在除法中调用，用于以减法模拟除法
 int judge1(char c[]);     //检查输入的函数
 int main()
 {
     char *p1,s1[MAX]={0},s2[MAX]={0};
-    p1=(char*)malloc(2*MAX);
     int l1,l2,i,j,k,a1[MAX]={0},a2[MAX]={0};
     printf("输入两个整数:\n");
-    while(~scanf("%s %s",s1,s2))   //读入EOF时可以跳出循环并结束程序
+    while(scanf("%s %s",s1,s2)==2)   //读入EOF时可以跳出循环并结束程序
     {
+        p1=(char*)malloc(2*MAX);
         while(1)
         {
             if(judge1(s1)&&judge1(s2))
@@ -54,33 +54,51 @@ int main()
             for(i=0,j=l2-1;i<l2&&j>=0;i++,j--)
             a2[j]=s2[i]-'0';
         }
-        printf("选择运算类型(1加法,2减法,3乘法,4除法):\n");
-        scanf("%d",&k);
-        switch(k)
+        i=1;
+        while(i)
         {
-            case 1:
+            printf("选择运算类型(1加法,2减法,3乘法,4除法):\n");
+            scanf("%d",&k);
+            switch(k)
             {
-                p1=jia(a1,a2,l1,l2,judge(s1),judge(s2));
-                break;
-            }
-            case 2:
-            {
-                p1=jian(a1,a2,l1,l2,judge(s1),judge(s2));
-                break;
-            }
-            case 3:
-            {
-                p1=cheng(a1,a2,l1,l2,judge(s1),judge(s2));
-                break;
-            }
-            case 4:
-            {
-                p1=chu(&a1,&a2,l1,l2,judge(s1),judge(s2));
-                break;
+                case 1:
+                {
+                    p1=jia(a1,a2,l1,l2,judge(s1),judge(s2));
+                    i=0;
+                    break;
+                }
+                case 2:
+                {
+                    p1=jian(a1,a2,l1,l2,judge(s1),judge(s2));
+                    i=0;
+                    break;
+                }
+                case 3:
+                {
+                    p1=cheng(a1,a2,l1,l2,judge(s1),judge(s2));
+                    i=0;
+                    break;
+                }
+                case 4:
+                {
+                    p1=chu(&a1,&a2,l1,l2,judge(s1),judge(s2));
+                    i=0;
+                    break;
+                }
+                default:
+                {
+                    printf("请重选\n");
+                    break;
+                }
             }
         }
         printf("运算结果为:");
         puts(p1);
+        memset(s1,0,sizeof(s1));     //将各个数清零
+        memset(s2,0,sizeof(s2));
+        memset(a1,0,sizeof(a1));
+        memset(a2,0,sizeof(a2));
+        memset(p1,0,2*MAX);
         printf("如果想结束程序，输入CTRL+Z并回车或者接着输入两个整数\n");
     }
     system("pause");
@@ -106,6 +124,7 @@ char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2)
     {
         for(i=0;i<strlen(p);i++)
         b[i]=*(p+i);
+        memset(p,0,2*MAX);
         return b;
     }
     else if((((!n1)&&n2)&&(compare(c1,c2,l1,l2)>0))||((n1&&(!n2))&&(compare(c1,c2,l1,l2)<0)))
@@ -113,20 +132,17 @@ char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2)
         b[0]='-';
         for(i=1,j=0;i<strlen(p)+1;i++,j++)
         b[i]=*(p+j);
+        memset(p,0,2*MAX);
         return b;
     }
-    int c[2*MAX]={0},l,k;
-    if(l1>=l2)
-    l=l1;
-    else
-    l=l2;
-    for(i=0;i<l;i++)
+    int c[2*MAX]={0},l=(l1>=l2)?l1:l2,k;
+    for(i=0;i<l;i++)    //先加好
+    c[i]=a1[i]+a2[i];
+    for(i=0;i<l;i++)    //再进位
     {
-        c[i]=a1[i]+a2[i];
-        if(c[i]>=10)     //进位运算
+        if(c[i]>=10)
         {
-            j=(c[i]/10)%10;
-            c[i+1]=c[i+1]+j;
+            c[i+1]+=c[i]/10;
             c[i]=c[i]%10;
         }
     }
@@ -170,12 +186,14 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
         b[0]='-';
         for(i=1,j=0;i<strlen(p1)+1&&j<strlen(p1);i++,j++)
         b[i]=*(p1+j);
+        memset(p1,0,2*MAX);
         return b;
     }
     else if(n1&&(!n2))
     {
         for(i=0;i<(strlen(p1));i++)
         b[i]=*(p1+i);
+        memset(p1,0,2*MAX);
         return b;
     }
     if(compare(c1,c2,l1,l2)<0)     //如果第一个数更小就调换位置，一直用大的数字减小的数字
@@ -197,8 +215,8 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
     {
         if(a1[i]<a2[i])
         {
-            a1[i+1]=a1[i+1]-1;
-            c[i]=10+a1[i]-a2[i];      //减法的借位
+            c[i]=a1[i]+10-a2[i];
+            a1[i+1]=a1[i+1]-1;      //减法的借位
         }
         else
         c[i]=a1[i]-a2[i];
@@ -219,35 +237,24 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
 }
 char *cheng(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
-    int c[2*MAX]={0},d[2*MAX]={0};
-    static char b[MAX*MAX]={0}; 
-    int i=0,j=0,k,l;
-    l=a1[l1-1]*a2[l2-1];
-    if(l>=10)
-    l=l1+l2;
-    else
-    l=l1+l2-1;
+    if(a1[l1-1]==0||a2[l2-1]==0)
+    return "0";
+    int c[2*MAX]={0};
+    static char b[MAX*MAX]={0};
+    int i=0,j=0,l=l1+l2;
+    for(i=0;i<l1;i++)
+    for(j=0;j<l2;j++)
+    c[j+i]+=a1[i]*a2[j];     //先全部都乘好
     for(i=0;i<l;i++)
     {
-        for(j=i,k=0;j<l&&k<l;j++,k++)
+        if(c[i]>=10)        //再处理进位
         {
-            c[j]+=((a1[i]*a2[k])%10);      //记录每个数乘完的个位
-            d[j]=((a1[i]*a2[k])/10)%10;    //记录每个数乘完的十位
-        }
-        for(j=0;j<l;j++)
-        if(d[j])        //把十位往前加
-        {
-            c[j+1]=c[j+1]+d[j];
-            d[j]=0;
+            c[i+1]+=c[i]/10;   //把十位加到前一位
+            c[i]=c[i]%10;      //把个位留在这一位
         }
     }
-    for(i=0;i<l;i++)
-    if(c[i]>=10)     //再把大于10的往前加
-    {
-        j=(c[i]/10)%10;
-        c[i+1]=c[i+1]+j;
-        c[i]=c[i]%10;
-    }
+    while(l>1&&c[l-1]==0)    //去掉前面的0
+    l--;
     reverse(c,c+l-1);
     if((n1&&n2)||((!n1)&&(!n2)))    //加负号
     for(i=0;i<l;i++)
@@ -263,16 +270,22 @@ char *cheng(int a1[],int a2[],int l1,int l2,int n1,int n2)
 char *chu(int (*a1)[MAX],int (*a2)[MAX],int l1,int l2,int n1,int n2)
 {
     int i,j=0,l=l1-l2+1,c[MAX]={0};    //l是得数的最大位数
-    char c1[MAX],c2[MAX];
+    char c1[MAX]={0},c2[MAX]={0};
+    static char b[2*MAX]={0};
     for(i=0;i<l1;i++)
     c1[i]=(*a1)[l1-1-i]+'0';
     for(i=0;i<l2;i++)
     c2[i]=(*a2)[l2-1-i]+'0';
     if((compare(c1,c2,l1,l2)<0||(*a1)[l1-1]==0)&&(*a2)[l2-1]!=0)
-    return "0";
+    {
+        b[0]='0';
+        return b;
+    }
     else if((*a2)[l2-1]==0)
-    return "error:can't divided by 0";
-    static char b[MAX]={0};
+    {
+        static char p[2*MAX]="不能除以0";
+        return p;
+    }
     for(i=l2-1;i>=0;i--)      //把除数补上0，可以减少很多循环次数
     (*a2)[i+l-1]=(*a2)[i];
     for(i=0;i<l-1;i++)
@@ -284,7 +297,7 @@ char *chu(int (*a1)[MAX],int (*a2)[MAX],int l1,int l2,int n1,int n2)
     {
         while(compare(c1,c2,l1,l2)>=0)    //如果可以减就继续减
         {
-            sub(&(*a1),&(*a2),&l1,l2);
+            jian1(&(*a1),&(*a2),&l1,l2);
             c[l-i-1]++;
             memset(c1,0,sizeof(c1));
             for(j=0;j<l1;j++)
@@ -319,9 +332,9 @@ void reverse(int *start,int *end)
 {
     while (start<end)
     {
-        int tmp=*start;
+        int temp=*start;
         *start=*end;
-        *end=tmp;
+        *end=temp;
         start++;
         end--;
     }
@@ -340,7 +353,7 @@ int compare(char c1[],char c2[],int l1,int l2)
     return 1;
     return strcmp(c1,c2);
 }
-void sub(int (*a1)[MAX],int (*a2)[MAX],int* l1,int l2)
+void jian1(int (*a1)[MAX],int (*a2)[MAX],int* l1,int l2)
 {
     int i;
     for(i=0;i<*l1;i++)
@@ -348,7 +361,7 @@ void sub(int (*a1)[MAX],int (*a2)[MAX],int* l1,int l2)
         if((*a1)[i]<(*a2)[i])
         {
             (*a1)[i]=10+(*a1)[i]-(*a2)[i];    //类似于大数减法，不过需要更改被除数
-            ((*a1)[i+1])--;
+            (*a1)[i+1]=(*a1)[i+1]-1;
         }
         else
         (*a1)[i]=(*a1)[i]-(*a2)[i];
