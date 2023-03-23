@@ -108,13 +108,16 @@ char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
     int i=0,j=0;
     char *p,c1[MAX]={0},c2[MAX]={0};
+    static char b[2*MAX]={0};
     for(i=0;i<l1;i++)        //把数组存到字符串里可以在compare函数中调用strcmp函数方便比较数的大小
     c1[i]=a1[l1-1-i]+'0';
     for(i=0;i<l2;i++)
     c2[i]=a2[l2-1-i]+'0';
     if((((!n1)&&n2)||(n1&&(!n2)))&&compare(c1,c2,l1,l2)==0)
-    return "0";
-    static char b[2*MAX]={0};
+    {
+        b[0]='0';
+        return b;
+    }
     p=(char*)malloc(2*MAX);
     if((((!n1)&&n2)||(n1&&(!n2)))&&compare(c1,c2,l1,l2)>0)
     p=jian(a1,a2,l1,l2,1,1);
@@ -170,17 +173,20 @@ char *jia(int a1[],int a2[],int l1,int l2,int n1,int n2)
 char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
     char *p1,c1[MAX]={0},c2[MAX]={0};
+    static char b[2*MAX]={0};
     int i,j;
     for(i=0;i<l1;i++)
     c1[i]=a1[l1-1-i]+'0';
     for(i=0;i<l2;i++)
     c2[i]=a2[l2-1-i]+'0';
     if(((n1&&n2)||((!n1)&&(!n2)))&&compare(c1,c2,l1,l2)==0)
-    return "0";
+    {
+        b[0]='0';
+        return b;
+    }
     p1=(char*)malloc(2*MAX);
     if(((!n1)&&(n2))||((n1)&&(!n2)))
     p1=jia(a1,a2,l1,l2,1,1);
-    static char b[2*MAX]={0};
     if((!n1)&&n2)
     {
         b[0]='-';
@@ -237,10 +243,13 @@ char *jian(int a1[],int a2[],int l1,int l2,int n1,int n2)
 }
 char *cheng(int a1[],int a2[],int l1,int l2,int n1,int n2)
 {
+    static char b[2*MAX]={0};
     if(a1[l1-1]==0||a2[l2-1]==0)
-    return "0";
+    {
+        b[0]='0';
+        return b;
+    }
     int c[2*MAX]={0};
-    static char b[MAX*MAX]={0};
     int i=0,j=0,l=l1+l2;
     for(i=0;i<l1;i++)
     for(j=0;j<l2;j++)
